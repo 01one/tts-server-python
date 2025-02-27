@@ -23,7 +23,6 @@ class MainHandler(tornado.web.RequestHandler):
 
 class TTSHandler(tornado.web.RequestHandler):
     def initialize(self):
-        # Load voice model once when initializing the handler
         self.voice = piper.voice.PiperVoice.load(Config.MODEL_PATH)
         
     def set_default_headers(self):
