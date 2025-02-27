@@ -26,7 +26,6 @@ class TTSHandler(tornado.web.RequestHandler):
         self.voice = piper.voice.PiperVoice.load(Config.MODEL_PATH)
         
     def set_default_headers(self):
-        # Allow CORS
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Methods", "POST, OPTIONS")
         self.set_header("Access-Control-Allow-Headers", "Content-Type")
@@ -38,7 +37,6 @@ class TTSHandler(tornado.web.RequestHandler):
         
     async def post(self):
         try:
-            # Parse JSON request
             data = json.loads(self.request.body)
             text = data.get('text', '').strip()
             
@@ -48,7 +46,6 @@ class TTSHandler(tornado.web.RequestHandler):
             if len(text) > Config.MAX_TEXT_LENGTH:
                 raise ValueError(f"Text exceeds maximum length of {Config.MAX_TEXT_LENGTH} characters")
             
-            # Create temporary directory with unique ID
             unique_id = str(uuid.uuid4())
             buffer = BytesIO()
             with wave.open(buffer, "wb") as wav_file:
@@ -57,7 +54,6 @@ class TTSHandler(tornado.web.RequestHandler):
                 wav_file.setframerate(Config.SAMPLE_RATE)
                 self.voice.synthesize(text, wav_file)
             
-            # Send the audio file
             self.set_header('Content-Type', 'audio/wav')
             self.set_header('Content-Disposition', f'attachment; filename=speech_{unique_id}.wav')
             self.write(buffer.getvalue())
