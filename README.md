@@ -7,3 +7,5 @@ sudo docker compose up --build
 ```bash
 http://127.0.0.1:8000/
 ```
+
+![Text to Speech Server](text_to_speech_server.gif)
